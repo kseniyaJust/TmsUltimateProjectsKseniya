@@ -19,7 +19,7 @@ public class LoadBook extends HttpServlet {
             Part filePart = request.getPart("file");
             String name = filePart.getSubmittedFileName();
             filePart.write("D:\\justProjects\\TMS_Projects\\24_26Servlets\\25FilesServer\\" + name);
-            response.getWriter().print("The file uploaded successfully :)");
+            response.sendRedirect("/24_26Servlets/Lesson25/succedUpload.html");
         } catch (Exception e) {
             response.getWriter().print("Something wrong :( " + e.getMessage());
         }

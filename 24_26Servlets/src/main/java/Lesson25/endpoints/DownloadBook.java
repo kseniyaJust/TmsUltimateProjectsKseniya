@@ -17,7 +17,7 @@ public class DownloadBook extends HttpServlet {
         String fileName = req.getParameter("filename");
 
         if (fileName == null || fileName.isEmpty()) {
-            showBookListPage(resp);
+            resp.getWriter().println("No file was transferred");
             return;
         }
 
@@ -50,19 +50,6 @@ public class DownloadBook extends HttpServlet {
             }
             out.flush();
         }
-    }
-    private void showBookListPage(HttpServletResponse response) throws IOException {
-                serveHtmlFile(response, "downloadBook.html");
-    }
-    private void serveHtmlFile(HttpServletResponse response, String fileName)
-            throws IOException {
-
-        String htmlContent = readHtmlFile(fileName);
-        response.getWriter().write(htmlContent);
-    }
-    private String readHtmlFile(String fileName) throws IOException {
-        String filePath = getServletContext().getRealPath("/") + fileName;
-        return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 
 }
