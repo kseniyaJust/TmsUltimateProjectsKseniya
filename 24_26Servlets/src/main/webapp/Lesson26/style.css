@@ -1,0 +1,21 @@
+
+#back{
+    display: flex;
+    width: 400px;
+    height:400px;
+    background-color: black;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: center;
+
+}
+
+p{
+    font-size: 40px;
+    margin: 0;
+    color: white;
+}
+i{
+    font-style: normal;
+    color: yellow;
+}
