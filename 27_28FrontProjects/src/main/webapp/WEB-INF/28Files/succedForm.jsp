@@ -12,7 +12,8 @@
     <h2 class="text-success mb-4">Заявка успешно сохранена!</h2>
 
     <div class="text-start mb-4">
-        <p><strong>Заголовок:</strong> <%= request.getAttribute("title") %></p>
+        <p><strong>Заголовок:</strong> <%= request.getAttribute("title") %>
+        </p>
         <p><strong>Категория:</strong>
             <%
                 String cat = (String) request.getAttribute("category");
@@ -21,8 +22,10 @@
                 else out.print("Другое");
             %>
         </p>
-        <p><strong>Заявитель:</strong> <%= request.getAttribute("requesterName") %></p>
-        <p><strong>Описание:</strong> <%= request.getAttribute("description") %></p>
+        <p><strong>Заявитель:</strong> <%= request.getAttribute("requesterName") %>
+        </p>
+        <p><strong>Описание:</strong> <%= request.getAttribute("description") %>
+        </p>
     </div>
 
     <div class="mt-4">

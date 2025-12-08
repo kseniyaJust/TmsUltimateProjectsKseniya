@@ -14,7 +14,8 @@
 
     <% String error = (String) request.getAttribute("error");
         if (error != null) { %>
-    <div class="alert alert-danger"><%= error %></div>
+    <div class="alert alert-danger"><%= error %>
+    </div>
     <% } %>
 
     <form action="/27_28FrontProjects/servletSave" method="post">
@@ -26,16 +27,22 @@
 
         <div class="mb-3">
             <label class="form-label">Описание</label>
-            <textarea class="form-control" name="description" rows="3"><%= request.getParameter("description") != null ? request.getParameter("description") : "" %></textarea>
+            <textarea class="form-control" name="description"
+                      rows="3"><%= request.getParameter("description") != null ? request.getParameter("description") : "" %></textarea>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Категория</label>
             <select class="form-select" name="category">
                 <option value="">Выберите категорию</option>
-                <option value="technical" <%= "technical".equals(request.getParameter("category")) ? "selected" : "" %>>Техническая</option>
-                <option value="support" <%= "support".equals(request.getParameter("category")) ? "selected" : "" %>>Поддержка</option>
-                <option value="other" <%= "other".equals(request.getParameter("category")) ? "selected" : "" %>>Другое</option>
+                <option value="technical" <%= "technical".equals(request.getParameter("category")) ? "selected" : "" %>>
+                    Техническая
+                </option>
+                <option value="support" <%= "support".equals(request.getParameter("category")) ? "selected" : "" %>>
+                    Поддержка
+                </option>
+                <option value="other" <%= "other".equals(request.getParameter("category")) ? "selected" : "" %>>Другое
+                </option>
             </select>
         </div>
 
@@ -45,7 +52,7 @@
                    value="<%= request.getParameter("requesterName") != null ? request.getParameter("requesterName") : "" %>">
         </div>
 
-            <button type="submit" class="btn btn-primary">Отправить</button>
+        <button type="submit" class="btn btn-primary">Отправить</button>
     </form>
 </div>
 </body>
