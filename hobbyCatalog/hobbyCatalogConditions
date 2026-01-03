@@ -21,3 +21,20 @@ LIMITS:
     Написание документации на Swagger
     Использование mapper для облегчения преобразования
     Использовать Docker для контейнеризации приложение и использования Postgres
+
+BD:
+    Users:
+        - id_user
+        - name
+        - email
+        - password
+        - role
+    Items:
+        - id_item
+        - name_item
+        - creator
+        - type_item
+        - price
+    Cart:
+        - id_user
+        - id_game
