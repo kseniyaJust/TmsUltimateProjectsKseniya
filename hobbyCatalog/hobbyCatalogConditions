@@ -22,7 +22,7 @@ LIMITS:
     Использование mapper для облегчения преобразования
     Использовать Docker для контейнеризации приложение и использования Postgres
 
-BD:
+DB:
     Users:
         - id_user
         - name
@@ -38,3 +38,4 @@ BD:
     Cart:
         - id_user
         - id_game
+        - amount
