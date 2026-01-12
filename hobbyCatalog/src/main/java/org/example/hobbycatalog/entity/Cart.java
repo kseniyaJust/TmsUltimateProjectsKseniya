@@ -15,12 +15,12 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_cart;
 
-    @OneToMany(mappedBy = "cartUsers")
-    @JoinColumn(name = "id_user",nullable = false)
+//    @OneToMany(mappedBy = "cartUsers")
+//    @JoinColumn(name = "id_user",nullable = false) - many to many
     private List<UsersInfo> usersInfo;
 
-    @OneToMany(mappedBy = "cartItems")
-    @JoinColumn(name = "id_item",nullable = false)
+//    @OneToMany(mappedBy = "cartItems")
+//    @JoinColumn(name = "id_item",nullable = false) - many to many
     private List<Items> items;
 
     private int amount;
