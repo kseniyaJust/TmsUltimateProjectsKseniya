@@ -1,4 +1,4 @@
 package org.example.hobbycatalog.swagger;
 
-public interface ItemsSwagger {
+public interface HobbiesSwagger {
 }

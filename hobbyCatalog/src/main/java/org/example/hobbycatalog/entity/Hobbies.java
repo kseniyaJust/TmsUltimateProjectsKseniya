@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Items {
+public class Hobbies {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_item;

@@ -1,4 +1,4 @@
 package org.example.hobbycatalog.mapper;
 
-public interface ItemsMapper {
+public interface TypeHobbiesMapper {
 }

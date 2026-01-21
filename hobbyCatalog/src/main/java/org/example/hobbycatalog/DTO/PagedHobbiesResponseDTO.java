@@ -1,4 +1,4 @@
 package org.example.hobbycatalog.DTO;
 
-public class TypeItemDTO {
+public class PagedHobbiesResponseDTO {
 }
