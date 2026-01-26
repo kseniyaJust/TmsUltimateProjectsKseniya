@@ -40,6 +40,9 @@ dependencies {
     //swagger
     compileOnly "io.springfox:springfox-swagger2:2.6.1"
     compileOnly 'io.springfox:springfox-swagger-ui:2.6.1'
+    //valdatioin
+    implementation 'org.glassfish.jakarta.validation:jakarta.validation-api:3.0.0'
+    implementation 'org.hibernate.validator:hibernate-validator:9.1.0.Final'
 }
 
 tasks.named('test') {

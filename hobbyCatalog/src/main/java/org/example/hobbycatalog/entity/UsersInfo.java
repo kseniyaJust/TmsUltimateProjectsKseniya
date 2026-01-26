@@ -7,8 +7,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import org.example.hobbycatalog.enumpackage.Role;
+
+import java.util.Set;
 
 @Entity
 public class UsersInfo {
@@ -29,6 +34,11 @@ public class UsersInfo {
     @Column(columnDefinition = "VARCHAR(10)")
     private Role role;
 
-    @ManyToOne
-    private Cart cartUsers;
+    @ManyToMany
+    @JoinTable(
+            name = "cart_users",
+            joinColumns = @JoinColumn(name ="id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_cart")
+    )
+    private Set<Cart> cartUsers;
 }
