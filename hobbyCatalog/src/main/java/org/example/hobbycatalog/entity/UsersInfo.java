@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import org.example.hobbycatalog.enumpackage.Role;
 
 import java.util.Set;
@@ -34,11 +34,20 @@ public class UsersInfo {
     @Column(columnDefinition = "VARCHAR(10)")
     private Role role;
 
+    private int balance_amount;
+
+    @OneToMany(mappedBy = "usersInfo_wallet")
+    private Set<Wallet>  wallets;
+
     @ManyToMany
     @JoinTable(
             name = "cart_users",
             joinColumns = @JoinColumn(name ="id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
+
     private Set<Cart> cartUsers;
+
+    @OneToMany(mappedBy = "usersInfo_adress")
+    private Set<UserAdress> userAdresses;
 }
