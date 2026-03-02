@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/wallet")
+//access only for owner
 public class WalletController {
 
     @GetMapping
@@ -30,7 +31,6 @@ public class WalletController {
         return "new wallet";
     }
 
-    //wallet can be deleted or updated only by owner user
     @PutMapping
     private String updateWallet(@RequestBody WalletDTO wallet){
         return "update wallet";

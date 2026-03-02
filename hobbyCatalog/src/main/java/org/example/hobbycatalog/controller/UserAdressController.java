@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/adress")
+//acces only to current user
 public class UserAdressController {
 
     @GetMapping
@@ -27,7 +28,6 @@ public class UserAdressController {
         return  "add adress";
     }
 
-    //adresses can be updated or deleted only by owner user
     @PutMapping
     public String updateAdress(@RequestBody UserAdressDTO userAdress){
         return "update adress";
