@@ -8,36 +8,52 @@ import org.example.hobbycatalog.DTO.WalletDTO;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name="",description = "")
+@Tag(name="Wallet Controller",description = "Controller that responsible for CRUD operations with wallet and money in it"+
+"Only owner of wallet can make any operations below")
 public interface WalletSwagger {
 
-    @Operation(summary = "")
-    @ApiResponse(responseCode = "", description = "")
-    @ApiResponse(responseCode = "", description = "")
+    @Operation(summary = "Method that gives amount of current balance of current user's wallet")
+    @ApiResponse(responseCode = "200", description = "")
+    @ApiResponse(responseCode = "400", description = "")
+    @ApiResponse(responseCode = "403", description = "")
+    @ApiResponse(responseCode = "409", description = "")
+    @ApiResponse(responseCode = "500", description = "")
     @Parameter(name = "",description = "")
     String getBalance();
 
-    @Operation(summary = "")
-    @ApiResponse(responseCode = "", description = "")
-    @ApiResponse(responseCode = "", description = "")
+    @Operation(summary = "Method that put some given number to wallet of current user's wallet")
+    @ApiResponse(responseCode = "200", description = "")
+    @ApiResponse(responseCode = "400", description = "")
+    @ApiResponse(responseCode = "403", description = "")
+    @ApiResponse(responseCode = "409", description = "")
+    @ApiResponse(responseCode = "500", description = "")
     @Parameter(name = "",description = "")
     String putMoney();
 
-    @Operation(summary = "")
-    @ApiResponse(responseCode = "", description = "")
-    @ApiResponse(responseCode = "", description = "")
+    @Operation(summary = "Method that allows to add new wallet and it's info of current user's wallet")
+    @ApiResponse(responseCode = "200", description = "")
+    @ApiResponse(responseCode = "400", description = "")
+    @ApiResponse(responseCode = "403", description = "")
+    @ApiResponse(responseCode = "409", description = "")
+    @ApiResponse(responseCode = "500", description = "")
     @Parameter(name = "",description = "")
     String addWallet(@RequestBody WalletDTO wallet);
 
-    @Operation(summary = "")
-    @ApiResponse(responseCode = "", description = "")
-    @ApiResponse(responseCode = "", description = "")
+    @Operation(summary = "Method that allows to update info in wallet of current user's wallet")
+    @ApiResponse(responseCode = "200", description = "")
+    @ApiResponse(responseCode = "400", description = "")
+    @ApiResponse(responseCode = "403", description = "")
+    @ApiResponse(responseCode = "409", description = "")
+    @ApiResponse(responseCode = "500", description = "")
     @Parameter(name = "",description = "")
     String updateWallet(@RequestBody WalletDTO wallet);
 
-    @Operation(summary = "")
-    @ApiResponse(responseCode = "", description = "")
-    @ApiResponse(responseCode = "", description = "")
+    @Operation(summary = "Method that allow to delete wallet for given id of current user's wallet")
+    @ApiResponse(responseCode = "200", description = "")
+    @ApiResponse(responseCode = "400", description = "")
+    @ApiResponse(responseCode = "403", description = "")
+    @ApiResponse(responseCode = "409", description = "")
+    @ApiResponse(responseCode = "500", description = "")
     @Parameter(name = "",description = "")
     String deleteWallet(@RequestParam Long id_wallet);
 }
