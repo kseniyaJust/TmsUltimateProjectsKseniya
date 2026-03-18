@@ -1,6 +1,5 @@
 package org.example.hobbycatalog.entity;
 
-import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Min;
-import org.apache.catalina.User;
 
 import java.util.Set;
 
@@ -24,5 +22,5 @@ public class TypeHobbies {
     @Min(2)
     private int countPlayers;
     @ManyToMany (mappedBy = "typeAndHobbies")
-    private Set<UsersInfo> users;
+    private Set<Hobbies> users;
 }

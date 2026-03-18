@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/adress")
+@RequestMapping("/user/adress")
 //acces only to current user
 public class UserAdressController {
 
