@@ -28,6 +28,8 @@ public class Wallet {
     @JsonFormat(pattern = "MM/yyyy")
     private Date date_expire;
 
+    private Long CVC;
+
 
 
 

@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import org.example.hobbycatalog.enumpackage.Role;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,9 +46,11 @@ public class UsersInfo {
             joinColumns = @JoinColumn(name ="id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
-
     private Set<Cart> cartUsers;
 
     @OneToMany(mappedBy = "usersInfo_adress")
     private Set<UserAdress> userAdresses;
+
+    @OneToMany (mappedBy = "creatorUser")
+    private List<TypeHobbies> creatorType;
 }
