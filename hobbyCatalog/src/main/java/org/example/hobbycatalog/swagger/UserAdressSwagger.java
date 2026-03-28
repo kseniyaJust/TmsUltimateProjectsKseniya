@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.hobbycatalog.DTO.UserAdressDTO;
+import org.example.hobbycatalog.DTO.UserAddressDTO;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,7 +34,7 @@ public interface UserAdressSwagger {
     @ApiResponse(responseCode = "409", description = "Database conflict")
     @ApiResponse(responseCode = "500", description = "Server error")
     @Parameter(name = "UserAddressUpdateDTO",description = "DTO for updating address")
-    public String updateAdress(@RequestBody UserAdressDTO userAdress);
+    public String updateAdress(@RequestBody UserAddressDTO userAdress);
 
     @Operation(summary = "Method that allow to delte 1 address for given id of current user")
     @ApiResponse(responseCode = "200", description = "Address was deleted successfully")

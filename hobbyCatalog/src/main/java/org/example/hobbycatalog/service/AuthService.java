@@ -10,14 +10,17 @@ public class AuthService {
 
     public AuthResponseDTO loginUser(AuthRequestDTO authRequestDTO)
     {
+        return new AuthResponseDTO();
     }
 
     public AuthResponseDTO registerUser(UsersInfoDTO usersInfoDTO)
     {
+        return new AuthResponseDTO();
 
     }
     public AuthResponseDTO refreshUser(String refreshToken)
     {
+        return new AuthResponseDTO();
 
     }
 }

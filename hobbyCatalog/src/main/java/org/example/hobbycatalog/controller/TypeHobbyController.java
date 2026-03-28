@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.hobbycatalog.DTO.TypeHobbiesDTO;
 import org.example.hobbycatalog.DTO.UpdateHobbyDTO;
 import org.example.hobbycatalog.DTO.UpdateTypeHobbyDTO;
+import org.example.hobbycatalog.entity.TypeHobbies;
 import org.example.hobbycatalog.service.TypeHobbyService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class TypeHobbyController {
     }
 
     @GetMapping
-    public List<TypeHobbiesDTO> getAllTypes(){
+    public List<TypeHobbies> getAllTypes(){
 
         return typeHobbyService.getTypeHobbyPagedResponse();
     }
@@ -39,7 +40,7 @@ public class TypeHobbyController {
     }
 
     @PutMapping("/{id}")
-    public UpdateTypeHobbyDTO updateType(@PathVariable Long id, @Valid @RequestBody UpdateTypeHobbyDTO updateTypeHobbyDTO){
+    public TypeHobbiesDTO updateType(@PathVariable Long id, @Valid @RequestBody UpdateTypeHobbyDTO updateTypeHobbyDTO){
 
         return typeHobbyService.updateNewTypeHobby(id,updateTypeHobbyDTO);
     }

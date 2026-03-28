@@ -1,10 +1,11 @@
 package org.example.hobbycatalog.controller;
 
-import org.example.hobbycatalog.DTO.UserAdressDTO;
+import org.example.hobbycatalog.DTO.UserAddressDTO;
 import org.example.hobbycatalog.entity.UserAdress;
-import org.example.hobbycatalog.entity.Wallet;
+import org.example.hobbycatalog.service.UserAddressService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,29 +13,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/user/adress")
 //acces only to current user
 public class UserAdressController {
 
+    UserAddressService userAddressService;
+
+    public UserAdressController(UserAddressService userAddressService) {
+        this.userAddressService = userAddressService;
+    }
+
     @GetMapping
-    public String getAllAdresses(){
-        return "get all adresses";
+    public List<UserAdress> getAllAdresses(){
+
+        return userAddressService.getAllUserAdresses();
     }
 
     @PostMapping
-    public String addAdress(@RequestBody UserAdressDTO userAdress){
-        return  "add adress";
+    public UserAddressDTO addAdress(@RequestBody UserAddressDTO userAddress){
+        return userAddressService.createNewAddress(userAddress);
     }
 
-    @PutMapping
-    public String updateAdress(@RequestBody UserAdressDTO userAdress){
-        return "update adress";
+    @PutMapping("/{id}")
+    public UserAddressDTO updateAdress(@PathVariable Long id, @RequestBody UserAddressDTO userAddress){
+
+        return userAddressService.updateAddress(id, userAddress);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public String deleteAdress(@RequestParam Long id_adress){
-        return "delete adress";
+
+        return userAddressService.deleteAddress(id_adress);
     }
 }

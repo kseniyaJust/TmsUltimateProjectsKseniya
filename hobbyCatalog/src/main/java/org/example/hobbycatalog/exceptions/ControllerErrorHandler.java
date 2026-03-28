@@ -44,7 +44,7 @@ public class ControllerErrorHandler {
     //404 Not Found
     @ExceptionHandler({
            // UsernameNotFoundException.class - with auth,
-            HobbyNotFoundException.class,
+            ItemNotFoundException.class,
             TypeHobbyNotFoundException.class
     })
     public ResponseEntity<?> handleNotFoundException(Exception ex){

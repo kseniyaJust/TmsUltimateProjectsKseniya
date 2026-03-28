@@ -1,9 +1,9 @@
 package org.example.hobbycatalog.service;
 
 import org.example.hobbycatalog.DTO.HobbyDTO;
-import org.example.hobbycatalog.DTO.PagedHobbiesResponseDTO;
 import org.example.hobbycatalog.DTO.UpdateHobbyDTO;
-import org.example.hobbycatalog.exceptions.HobbyNotFoundException;
+import org.example.hobbycatalog.entity.Hobbies;
+import org.example.hobbycatalog.exceptions.ItemNotFoundException;
 import org.example.hobbycatalog.repository.HobbiesRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +19,21 @@ public class HobbiesService {
     }
 
     public HobbyDTO createNewHobby(HobbyDTO hobbyDTO) {
+        return new HobbyDTO();
     }
 
     public  HobbyDTO updateNewHobby(Long id, UpdateHobbyDTO updateHobbyDTO) {
+        return new HobbyDTO();
 
     }
 
-    public HobbyDTO getHobbyById(Long id){
+    public Hobbies getHobbyById(Long id){
         if(hobbiesRepository.findById(id).isPresent())
             return hobbiesRepository.findById(id).get();
-        throw new HobbyNotFoundException("Hobby with id: " + id +" not found");
+        throw new ItemNotFoundException("Hobby with id: " + id +" not found");
     }
 
-    public List<HobbyDTO> getHobbyPagedResponse(){
+    public List<Hobbies> getHobbyPagedResponse(){
         return hobbiesRepository.findAll();
 
     }
@@ -41,6 +43,6 @@ public class HobbiesService {
             hobbiesRepository.deleteById(id);
             return "Hobby with id: " + id + " deleted";
         }
-        throw new HobbyNotFoundException("Hobby with id: " + id + " not found");
+        throw new ItemNotFoundException("Hobby with id: " + id + " not found");
     }
 }

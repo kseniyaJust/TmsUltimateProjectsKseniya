@@ -28,13 +28,13 @@ public class HobbiesController {
     }
 
     @GetMapping
-    public List<HobbyDTO> getAllCatalog(){
+    public List<Hobbies> getAllCatalog(){
 
         return hobbiesService.getHobbyPagedResponse();
     }
 
     @GetMapping("/{id}")
-    public HobbyDTO getOneHobby(@PathVariable Long id){
+    public Hobbies getOneHobby(@PathVariable Long id){
         return hobbiesService.getHobbyById(id);
     }
 

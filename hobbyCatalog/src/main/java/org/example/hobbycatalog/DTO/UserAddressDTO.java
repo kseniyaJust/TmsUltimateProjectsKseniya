@@ -1,9 +1,8 @@
 package org.example.hobbycatalog.DTO;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
 
-public class UserAdressDTO {
+public class UserAddressDTO {
     @NotEmpty
     private String city;
 
