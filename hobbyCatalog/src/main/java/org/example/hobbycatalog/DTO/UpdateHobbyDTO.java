@@ -1,18 +1,17 @@
 package org.example.hobbycatalog.DTO;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 import org.example.hobbycatalog.entity.TypeHobbies;
 
-import java.util.Set;
 
+@Data
 public class UpdateHobbyDTO {
 
-    private Set<TypeHobbies> typeAndHobbies;
+    private TypeHobbies nameType;
 
-    @Size(min =1, max = 50)
     private String name;
 
-    @Size(min =1, max = 100)
     private String creator;
+
+    private double price;
 }

@@ -28,7 +28,7 @@ public class HobbiesController {
     }
 
     @GetMapping
-    public List<Hobbies> getAllCatalog(){
+    public List<HobbyDTO> getAllCatalog(){
 
         return hobbiesService.getHobbyPagedResponse();
     }

@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface HobbiesRepository extends JpaRepository<Hobbies,Long> {
-    List<Hobbies> findAll();
+
 }

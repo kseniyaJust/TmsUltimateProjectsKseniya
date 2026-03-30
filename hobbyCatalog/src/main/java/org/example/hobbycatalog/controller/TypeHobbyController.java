@@ -6,6 +6,7 @@ import org.example.hobbycatalog.DTO.UpdateHobbyDTO;
 import org.example.hobbycatalog.DTO.UpdateTypeHobbyDTO;
 import org.example.hobbycatalog.entity.TypeHobbies;
 import org.example.hobbycatalog.service.TypeHobbyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,33 +22,39 @@ import java.util.List;
 @RequestMapping("/hobbies/types")
 public class TypeHobbyController {
 
-    TypeHobbyService typeHobbyService;
+    private TypeHobbyService typeHobbiesService;
 
-    public TypeHobbyController(TypeHobbyService typeHobbyService) {
-        this.typeHobbyService = typeHobbyService;
+    public TypeHobbyController(TypeHobbyService typeHobbiesService) {
+        this.typeHobbiesService = typeHobbiesService;
     }
 
-    @GetMapping
-    public List<TypeHobbies> getAllTypes(){
-
-        return typeHobbyService.getTypeHobbyPagedResponse();
-    }
-
+    // Создание нового типа хобби
     @PostMapping
-    public TypeHobbiesDTO createNewType(@Valid @RequestBody TypeHobbiesDTO typeHobbiesDTO){
-
-        return typeHobbyService.createNewTypeHobby(typeHobbiesDTO);
+    public TypeHobbiesDTO createTypeHobby(@Valid @RequestBody TypeHobbiesDTO typeHobbiesDTO) {
+        return typeHobbiesService.createTypeHobby(typeHobbiesDTO);
     }
 
+    // Получение всех типов
+    @GetMapping
+    public List<TypeHobbiesDTO> getAllTypeHobbies() {
+        return typeHobbiesService.getAllTypeHobbies();
+    }
+
+    // Получение типа по ID
+    @GetMapping("/{id}")
+    public TypeHobbiesDTO getTypeHobbyById(@PathVariable Long id) {
+        return typeHobbiesService.getTypeHobbyById(id);
+    }
+
+    // Обновление типа
     @PutMapping("/{id}")
-    public TypeHobbiesDTO updateType(@PathVariable Long id, @Valid @RequestBody UpdateTypeHobbyDTO updateTypeHobbyDTO){
-
-        return typeHobbyService.updateNewTypeHobby(id,updateTypeHobbyDTO);
+    public TypeHobbiesDTO updateTypeHobby(@PathVariable Long id, @Valid @RequestBody UpdateTypeHobbyDTO typeHobbiesDTO) {
+        return typeHobbiesService.updateTypeHobby(id, typeHobbiesDTO);
     }
 
+    // Удаление типа
     @DeleteMapping("/{id}")
-    public String deleteType(@PathVariable Long id){
-
-        return typeHobbyService.deleteTypeHobbyById(id);
+    public void deleteTypeHobby(@PathVariable Long id) {
+        typeHobbiesService.deleteTypeHobby(id);
     }
 }
