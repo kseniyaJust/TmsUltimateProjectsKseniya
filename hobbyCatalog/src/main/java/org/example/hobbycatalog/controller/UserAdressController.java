@@ -1,5 +1,6 @@
 package org.example.hobbycatalog.controller;
 
+import org.example.hobbycatalog.DTO.UpdateUserAddressDTO;
 import org.example.hobbycatalog.DTO.UserAddressDTO;
 import org.example.hobbycatalog.entity.UserAdress;
 import org.example.hobbycatalog.service.UserAddressService;
@@ -32,6 +33,10 @@ public class UserAdressController {
 
         return userAddressService.getAllUserAdresses();
     }
+    @GetMapping("/{id}")
+    public UserAdress getOneAddress(@PathVariable Long id){
+        return userAddressService.getOneAddress(id);
+    }
 
     @PostMapping
     public UserAddressDTO addAdress(@RequestBody UserAddressDTO userAddress){
@@ -39,14 +44,14 @@ public class UserAdressController {
     }
 
     @PutMapping("/{id}")
-    public UserAddressDTO updateAdress(@PathVariable Long id, @RequestBody UserAddressDTO userAddress){
+    public UserAddressDTO updateAdress(@PathVariable Long id, @RequestBody UpdateUserAddressDTO userAddress){
 
         return userAddressService.updateAddress(id, userAddress);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteAdress(@RequestParam Long id_adress){
+    public String deleteAdress(@PathVariable Long id){
 
-        return userAddressService.deleteAddress(id_adress);
+        return userAddressService.deleteAddress(id);
     }
 }
