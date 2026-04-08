@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.example.hobbycatalog.DTO.AuthRequestDTO;
 import org.example.hobbycatalog.DTO.AuthResponseDTO;
-import org.example.hobbycatalog.DTO.UsersInfoDTO;
-import org.example.hobbycatalog.service.AuthService;
+import org.example.hobbycatalog.DTO.RegistUserDTO;
+import org.example.hobbycatalog.service.SecurityTokenService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,25 +17,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users/info")
 public class UsersInfoController {
 
-    AuthService authService;
+    SecurityTokenService securityTokenService;
 
-    public UsersInfoController(AuthService authService) {
-        this.authService = authService;
+    public UsersInfoController(SecurityTokenService securityTokenService) {
+        this.securityTokenService = securityTokenService;
     }
 
     @PostMapping
-    public AuthResponseDTO registUser( @Valid @RequestBody UsersInfoDTO usersInfoDTO) {
-        return authService.registerUser(usersInfoDTO);
+    public AuthResponseDTO registUser( @Valid @RequestBody RegistUserDTO usersInfoDTO) {
+        return securityTokenService.registerUser(usersInfoDTO);
     }
 
     @GetMapping
     public AuthResponseDTO loginUser(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
 
-        return authService.loginUser(authRequestDTO);
+        return securityTokenService.loginUser(authRequestDTO);
     }
 
     @PutMapping
     public AuthResponseDTO refreshToken(@NotEmpty @RequestBody String refreshToken) {
-        return authService.refreshUser(refreshToken);
+        return securityTokenService.refreshUser(refreshToken);
     }
 }

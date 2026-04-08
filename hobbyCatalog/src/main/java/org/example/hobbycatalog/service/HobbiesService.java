@@ -49,8 +49,13 @@ public class HobbiesService {
     }
 
     public  HobbyDTO updateNewHobby(Long id, UpdateHobbyDTO updateHobbyDTO) {
-        Hobbies existingHobby = hobbiesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Type hobby not found with id: " + id));
+        Hobbies existingHobby;
+        if(checkExistHobby(id)){
+            existingHobby = hobbiesRepository.findById(id).get();
+        }
+        else{
+            throw new ItemNotFoundException("Type hobby not found with id: " + id);
+        }
 
         if(updateHobbyDTO.getName() != null){
             existingHobby.setName(updateHobbyDTO.getName());
@@ -74,7 +79,7 @@ public class HobbiesService {
     }
 
     public Hobbies getHobbyById(Long id){
-        if(hobbiesRepository.findById(id).isPresent())
+        if(checkExistHobby(id))
             return hobbiesRepository.findById(id).get();
         throw new ItemNotFoundException("Hobby with id: " + id +" not found");
     }
@@ -90,10 +95,16 @@ public class HobbiesService {
     }
 
     public String deleteHobbyById(Long id){
-        if(hobbiesRepository.findById(id).isPresent()){
+        if(checkExistHobby(id)){
             hobbiesRepository.deleteById(id);
             return "Hobby with id: " + id + " deleted";
         }
         throw new ItemNotFoundException("Hobby with id: " + id + " not found");
+    }
+
+    public boolean checkExistHobby(Long id){
+        if(hobbiesRepository.findById(id).isPresent())
+            return true;
+        return false;
     }
 }
