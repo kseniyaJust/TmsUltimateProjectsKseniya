@@ -1,17 +1,24 @@
 package org.example.hobbycatalog.security;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.example.hobbycatalog.DTO.AuthRequestDTO;
+import org.example.hobbycatalog.entity.UsersInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import io.jsonwebtoken.Claims;
 
+@Slf4j
 @Service
 public class JwtService {
 
@@ -24,12 +31,36 @@ public class JwtService {
     @Value("${app.jwt.refreshExpirationMs}")
     private Long refresh_token_valid_time;
 
-    public String generateAccessJwtToken(AuthRequestDTO authRequestDTO) {
-        return "access";
+    public String generateAccessJwtToken(UsersInfo user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId_user());
+        claims.put("role", user.getRole() != null ? user.getRole().name() : "USER");
+
+        log.info("generate Access Token");
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(user.getEmail())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + access_token_valid_time))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    public String generateRefreshToken() {
-        return "refresh";
+    public String generateRefreshToken(UsersInfo user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId_user());
+        claims.put("type", "refresh");
+
+        log.info("generate Refresh Token");
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(user.getEmail())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refresh_token_valid_time))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String extractEmail(String token) {

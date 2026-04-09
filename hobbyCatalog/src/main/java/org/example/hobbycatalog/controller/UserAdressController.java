@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user/adress")
+@RequestMapping("/users/adress")
 //acces only to current user
 public class UserAdressController {
 

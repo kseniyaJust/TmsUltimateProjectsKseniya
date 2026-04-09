@@ -2,6 +2,7 @@ package org.example.hobbycatalog.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.extern.slf4j.Slf4j;
 import org.example.hobbycatalog.DTO.AuthRequestDTO;
 import org.example.hobbycatalog.DTO.AuthResponseDTO;
 import org.example.hobbycatalog.DTO.RegistUserDTO;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
+@Slf4j
 @RestController
 @RequestMapping("/users/info")
 public class UsersInfoController {
@@ -23,19 +27,19 @@ public class UsersInfoController {
         this.securityTokenService = securityTokenService;
     }
 
-    @PostMapping
-    public AuthResponseDTO registUser( @Valid @RequestBody RegistUserDTO usersInfoDTO) {
+    @PostMapping("/regist")
+    public String registUser( @Valid @RequestBody RegistUserDTO usersInfoDTO) {
         return securityTokenService.registerUser(usersInfoDTO);
     }
 
-    @GetMapping
+    @PostMapping("/login")
     public AuthResponseDTO loginUser(@Valid @RequestBody AuthRequestDTO authRequestDTO) {
 
         return securityTokenService.loginUser(authRequestDTO);
     }
 
-    @PutMapping
-    public AuthResponseDTO refreshToken(@NotEmpty @RequestBody String refreshToken) {
+    @PostMapping("/refresh")
+    public AuthResponseDTO refreshToken(@NotEmpty @RequestBody Map<String, String> refreshToken) {
         return securityTokenService.refreshUser(refreshToken);
     }
 }

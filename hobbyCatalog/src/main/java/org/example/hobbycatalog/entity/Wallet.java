@@ -29,6 +29,8 @@ public class Wallet {
 
     private Long CVC;
 
+    private int balance_amount;
+
 
 
 
