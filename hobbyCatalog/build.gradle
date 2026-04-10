@@ -62,6 +62,9 @@ dependencies {
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //Flyway
+    implementation 'org.flywaydb:flyway-database-postgresql:10.22.0'
 }
 
 tasks.named('test') {
