@@ -14,7 +14,7 @@ public class SecurityContextAccessor {
         Object principal = checkAuthorisation();
 
         if(principal instanceof UsersInfo){
-            return ((UsersInfo) principal).getId_user();
+            return ((UsersInfo) principal).getIdUser();
         }
         throw new AccessDeniedException("Unexpected principal type: " +principal.getClass().getName());
     }

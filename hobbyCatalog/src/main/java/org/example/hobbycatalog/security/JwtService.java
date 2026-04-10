@@ -33,7 +33,7 @@ public class JwtService {
 
     public String generateAccessJwtToken(UsersInfo user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", user.getId_user());
+        claims.put("userId", user.getIdUser());
         claims.put("role", user.getRole() != null ? user.getRole().name() : "USER");
 
         log.info("generate Access Token");
@@ -49,7 +49,7 @@ public class JwtService {
 
     public String generateRefreshToken(UsersInfo user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", user.getId_user());
+        claims.put("userId", user.getIdUser());
         claims.put("type", "refresh");
 
         log.info("generate Refresh Token");

@@ -12,8 +12,8 @@ public interface WalletMapper {
 
     // DTO to Entity
     @Mappings({
-            @Mapping(target = "id_wallet", ignore = true),
-            @Mapping(target = "usersInfo_wallet", ignore = true)
+            @Mapping(target = "idWallet", ignore = true),
+            @Mapping(target = "usersInfo", ignore = true)
     })
     Wallet toEntity(WalletDTO walletDTO);
 }

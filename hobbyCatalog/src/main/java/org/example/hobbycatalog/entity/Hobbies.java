@@ -3,15 +3,15 @@ package org.example.hobbycatalog.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "hobbies")
 public class Hobbies {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Изменил с AUTO на IDENTITY
     @Column(name = "id_hobby")
     private Long idHobby;
 
@@ -19,22 +19,16 @@ public class Hobbies {
     @JoinColumn(name = "id_type")
     private TypeHobbies typeAndHobbies;
 
-    @Column(unique = true)
+    @Column(name = "name", unique = true)
     private String name;
 
-    @Column(columnDefinition = "VARCHAR(100)")
+    @Column(name = "creator", columnDefinition = "VARCHAR(100)")
     private String creator;
 
-    @Column
+    @Column(name = "price")
     private double price;
 
+    @ManyToMany(mappedBy = "hobbies") // Соответствует полю hobbies в Cart
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "cart_hobbies",
-            joinColumns = @JoinColumn(name = "id_hobby"),
-            inverseJoinColumns = @JoinColumn(name = "id_cart")
-    )
-    private Set<Cart> cartHobbies;  // Убедитесь, что это поле существует
-
+    private Set<Cart> carts; // Изменил имя с cartHobbies на carts для соответствия
 }

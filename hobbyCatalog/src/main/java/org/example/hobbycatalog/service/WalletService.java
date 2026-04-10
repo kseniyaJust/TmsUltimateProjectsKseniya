@@ -47,7 +47,7 @@ public class WalletService {
     public List<WalletDTO> getAllUserWallets() {
         UsersInfo currentUser = getCurrentUser();
 
-        return walletRepository.findByUsersInfo_wallet_IdUser(currentUser.getId_user())
+        return walletRepository.findByUsersInfo_IdUser(currentUser.getIdUser())
                 .stream()
                 .map(walletMapper::toDTO)
                 .collect(Collectors.toList());
@@ -58,7 +58,7 @@ public class WalletService {
     public WalletDTO getWalletById(Long walletId) {
         UsersInfo currentUser = getCurrentUser();
 
-        Wallet wallet = walletRepository.findByIdWalletAndUsersInfo_wallet_IdUser(walletId, currentUser.getId_user())
+        Wallet wallet = walletRepository.findByIdWalletAndUsersInfo_IdUser(walletId, currentUser.getIdUser())
                 .orElseThrow(() -> new ItemNotFoundException(
                         "Wallet with id " + walletId + " not found or doesn't belong to you"
                 ));
@@ -75,7 +75,7 @@ public class WalletService {
         boolean exists = walletRepository.findAll()
                 .stream()
                 .anyMatch(w -> w.getCart_number().equals(walletDTO.getCart_number())
-                        && w.getUsersInfo_wallet().getId_user().equals(currentUser.getId_user()));
+                        && w.getUsersInfo().getIdUser().equals(currentUser.getIdUser()));
 
         if (exists) {
             throw new RuntimeException("Wallet with this card number already exists for you");
@@ -83,10 +83,10 @@ public class WalletService {
 
         // Создаем новый кошелек
         Wallet wallet = walletMapper.toEntity(walletDTO);
-        wallet.setUsersInfo_wallet(currentUser);
+        wallet.setUsersInfo(currentUser);
 
         Wallet savedWallet = walletRepository.save(wallet);
-        log.info("Created new wallet with id {} for user {}", savedWallet.getId_wallet(), currentUser.getEmail());
+        log.info("Created new wallet with id {} for user {}", savedWallet.getIdWallet(), currentUser.getEmail());
 
         return walletMapper.toDTO(savedWallet);
     }
@@ -97,7 +97,7 @@ public class WalletService {
         UsersInfo currentUser = getCurrentUser();
 
         // Проверяем, что кошелек принадлежит пользователю
-        Wallet existingWallet = walletRepository.findByIdWalletAndUsersInfo_wallet_IdUser(walletId, currentUser.getId_user())
+        Wallet existingWallet = walletRepository.findByIdWalletAndUsersInfo_IdUser(walletId, currentUser.getIdUser())
                 .orElseThrow(() -> new ItemNotFoundException(
                         "Wallet with id " + walletId + " not found or doesn't belong to you"
                 ));
@@ -109,7 +109,7 @@ public class WalletService {
         existingWallet.setCVC(walletDTO.getCVC());
 
         Wallet updatedWallet = walletRepository.save(existingWallet);
-        log.info("Updated wallet with id {} for user {}", updatedWallet.getId_wallet(), currentUser.getEmail());
+        log.info("Updated wallet with id {} for user {}", updatedWallet.getIdWallet(), currentUser.getEmail());
 
         return walletMapper.toDTO(updatedWallet);
     }
@@ -120,7 +120,7 @@ public class WalletService {
         UsersInfo currentUser = getCurrentUser();
 
         // Проверяем, что кошелек принадлежит пользователю
-        if (!walletRepository.existsByIdWalletAndUsersInfo_wallet_IdUser(walletId, currentUser.getId_user())) {
+        if (!walletRepository.existsByIdWalletAndUsersInfo_IdUser(walletId, currentUser.getIdUser())) {
             throw new ItemNotFoundException(
                     "Wallet with id " + walletId + " not found or doesn't belong to you"
             );
@@ -143,7 +143,7 @@ public class WalletService {
         UsersInfo currentUser = getCurrentUser();
 
         // Проверяем, что кошелек принадлежит пользователю
-        Wallet wallet = walletRepository.findByIdWalletAndUsersInfo_wallet_IdUser(walletId, currentUser.getId_user())
+        Wallet wallet = walletRepository.findByIdWalletAndUsersInfo_IdUser(walletId, currentUser.getIdUser())
                 .orElseThrow(() -> new ItemNotFoundException(
                         "Wallet with id " + walletId + " not found or doesn't belong to you"
                 ));

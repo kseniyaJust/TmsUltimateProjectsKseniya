@@ -1,58 +1,55 @@
 package org.example.hobbycatalog.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.example.hobbycatalog.enumpackage.Role;
-
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "users_info")
 public class UsersInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id_user;
 
-    @Column
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_user")
+    private Long idUser;
+
+    @Column(name = "name")
     private String name;
 
-    @Column (unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column
+    @Column(name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "VARCHAR(10)")
+    @Column(name = "role", columnDefinition = "VARCHAR(10)")
     private Role role;
 
+    @Column(name = "balance_amount")
     private int balance_amount;
 
-    @OneToMany(mappedBy = "usersInfo_wallet")
-    private Set<Wallet>  wallets;
+    @OneToMany(mappedBy = "usersInfo")
+    @JsonIgnore
+    private Set<Wallet> wallets;
 
     @ManyToMany
     @JoinTable(
             name = "cart_users",
-            joinColumns = @JoinColumn(name ="id_user"),
+            joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_cart")
     )
     private Set<Cart> cartUsers;
 
     @OneToMany(mappedBy = "usersInfo_adress")
+    @JsonIgnore
     private Set<UserAdress> userAdresses;
 
-    @OneToMany (mappedBy = "creatorUser")
+    @OneToMany(mappedBy = "creatorUser")
+    @JsonIgnore
     private List<TypeHobbies> creatorType;
 }

@@ -9,11 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet,Long> {
-    List<Wallet> findByUsersInfo_wallet_IdUser(Long userId);
+    List<Wallet> findByUsersInfo_IdUser(Long userId);
 
-    // Найти кошелек по ID и ID пользователя (для проверки владельца)
-    Optional<Wallet> findByIdWalletAndUsersInfo_wallet_IdUser(Long walletId, Long userId);
+    Optional<Wallet> findByIdWalletAndUsersInfo_IdUser(Long walletId, Long userId);
 
-    // Проверить существование кошелька у пользователя
-    boolean existsByIdWalletAndUsersInfo_wallet_IdUser(Long walletId, Long userId);
+    boolean existsByIdWalletAndUsersInfo_IdUser(Long walletId, Long userId);
 }
