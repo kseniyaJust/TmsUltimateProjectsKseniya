@@ -7,9 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Data;
+
 import java.sql.Date;
 
 @Entity
+@Data
 public class Wallet {
 
     @Id
@@ -29,7 +32,6 @@ public class Wallet {
 
     private Long CVC;
 
-    private int balance_amount;
 
 
 

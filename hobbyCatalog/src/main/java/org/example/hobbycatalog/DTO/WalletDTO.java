@@ -1,9 +1,11 @@
 package org.example.hobbycatalog.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.sql.Date;
 
+@Data
 public class WalletDTO {
 
     private String owner_name;

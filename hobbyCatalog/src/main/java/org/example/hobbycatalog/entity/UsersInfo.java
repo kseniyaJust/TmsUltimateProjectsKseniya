@@ -37,6 +37,7 @@ public class UsersInfo {
     @Column(columnDefinition = "VARCHAR(10)")
     private Role role;
 
+    private int balance_amount;
 
     @OneToMany(mappedBy = "usersInfo_wallet")
     private Set<Wallet>  wallets;

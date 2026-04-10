@@ -1,44 +1,65 @@
 package org.example.hobbycatalog.controller;
 
+import jakarta.validation.Valid;
 import org.example.hobbycatalog.DTO.WalletDTO;
-import org.example.hobbycatalog.entity.Wallet;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.hobbycatalog.service.WalletService;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/wallet")
-//access only for owner
+@PreAuthorize("isAuthenticated()") // Все методы требуют аутентификации
 public class WalletController {
 
+    private final WalletService walletService;
+
+    public WalletController(WalletService walletService) {
+        this.walletService = walletService;
+    }
+
+    // Получить все кошельки пользователя
     @GetMapping
-    private String getBalance(){
-        return "balance";
+    public List<WalletDTO> getAllWallets() {
+        return walletService.getAllUserWallets();
     }
 
-    @PutMapping("/money/{id}")
-    private String putMoney(@PathVariable Long id){
-        return "money";
+    // Получить конкретный кошелек по ID
+    @GetMapping("/{walletId}")
+    public WalletDTO getWalletById(@PathVariable Long walletId) {
+        return walletService.getWalletById(walletId);
     }
 
+    // Получить общий баланс
+    @GetMapping("/balance")
+    public int getBalance() {
+        return walletService.getTotalBalance();
+    }
+
+    // Создать новый кошелек
     @PostMapping
-    private String addWallet(@RequestBody WalletDTO wallet){
-        return "new wallet";
+    public WalletDTO addWallet(@Valid @RequestBody WalletDTO wallet) {
+        return walletService.createWallet(wallet);
     }
 
-    @PutMapping
-    private String updateWallet(@RequestBody WalletDTO wallet){
-        return "update wallet";
+    // Обновить кошелек
+    @PutMapping("/{walletId}")
+    public WalletDTO updateWallet(@PathVariable Long walletId, @Valid @RequestBody WalletDTO wallet) {
+        return walletService.updateWallet(walletId, wallet);
     }
 
-    @DeleteMapping
-    private String deleteWallet(@RequestParam Long id_wallet){
-        return "delete wallet";
+    // Удалить кошелек
+    @DeleteMapping("/{walletId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWallet(@PathVariable Long walletId) {
+        walletService.deleteWallet(walletId);
+    }
+
+    // Пополнить баланс через кошелек
+    @PutMapping("/{walletId}/add-money")
+    public String addMoney(@PathVariable Long walletId, @RequestParam int amount) {
+        return walletService.addMoney(walletId, amount);
     }
 }
