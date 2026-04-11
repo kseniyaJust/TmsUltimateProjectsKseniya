@@ -7,7 +7,7 @@ import org.example.hobbycatalog.entity.TypeHobbies;
 @Data
 public class UpdateHobbyDTO {
 
-    private TypeHobbies nameType;
+    private String nameType;
 
     private String name;
 
