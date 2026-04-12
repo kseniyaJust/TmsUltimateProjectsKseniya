@@ -8,19 +8,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HobbiesRepository extends JpaRepository<Hobbies, Long> {
 
+    // Добавьте эти методы
+    boolean existsByName(String name);
 
+    Optional<Hobbies> findByName(String name);
 
-    // Поиск по типу хобби с пагинацией
+    Page<Hobbies> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Page<Hobbies> findByPriceBetween(double minPrice, double maxPrice, Pageable pageable);
+
     @Query("SELECT h FROM Hobbies h WHERE h.typeAndHobbies.typeName = :typeName")
     Page<Hobbies> findByTypeName(@Param("typeName") String typeName, Pageable pageable);
 
-
-    // Поиск с несколькими параметрами
     @Query("SELECT h FROM Hobbies h WHERE " +
             "(:name IS NULL OR LOWER(h.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
             "(:minPrice IS NULL OR h.price >= :minPrice) AND " +

@@ -8,16 +8,13 @@ import org.example.hobbycatalog.mapper.HobbiesMapper;
 import org.example.hobbycatalog.repository.CartRepository;
 import org.example.hobbycatalog.repository.HobbiesRepository;
 import org.example.hobbycatalog.repository.UsersInfoRepository;
-import org.example.hobbycatalog.repository.WalletRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,18 +24,15 @@ public class CartService {
     private final CartRepository cartRepository;
     private final HobbiesRepository hobbiesRepository;
     private final UsersInfoRepository usersInfoRepository;
-    private final WalletRepository walletRepository;
     private final HobbiesMapper hobbiesMapper;
 
     public CartService(CartRepository cartRepository,
                        HobbiesRepository hobbiesRepository,
                        UsersInfoRepository usersInfoRepository,
-                       WalletRepository walletRepository,
                        HobbiesMapper hobbiesMapper) {
         this.cartRepository = cartRepository;
         this.hobbiesRepository = hobbiesRepository;
         this.usersInfoRepository = usersInfoRepository;
-        this.walletRepository = walletRepository;
         this.hobbiesMapper = hobbiesMapper;
     }
 
@@ -50,36 +44,32 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    private Cart getCurrentUserCart() {
-        UsersInfo user = getCurrentUser();
-
-        // Ищем корзину пользователя
-        Cart cart = cartRepository.findByUsersInfo_IdUser(user.getIdUser())
-                .orElse(null);
-
-        if (cart == null) {
-            cart = new Cart();
-            cart.setUsersInfo(Set.of(user));
-            cart.setHobbies(new HashSet<>());
-            cart.setAmount(0);
-            cart = cartRepository.save(cart);
-            log.info("Created new cart for user: {}", user.getEmail());
-        }
-        return cart;
-    }
-
     // Просмотр всех товаров в корзине
     @Transactional(readOnly = true)
     public CartDTO getCart() {
-        Cart cart = getCurrentUserCart();
-        CartDTO cartDTO = new CartDTO();
-        cartDTO.setId_cart(cart.getId_cart());
-        cartDTO.setAmount(cart.getAmount());
+        UsersInfo user = getCurrentUser();
+        List<Cart> cartItems = cartRepository.findByUserId(user.getIdUser());
 
-        Set<HobbyDTO> hobbyDTOs = cart.getHobbies().stream()
-                .map(hobbiesMapper::toDTO)
-                .collect(Collectors.toSet());
-        cartDTO.setHobbies(hobbyDTOs);
+        CartDTO cartDTO = new CartDTO();
+        List<CartItemDTO> items = new ArrayList<>();
+        int totalAmount = 0;
+
+        for (Cart item : cartItems) {
+            Hobbies hobby = item.getHobby();
+            double itemTotalPrice = hobby.getPrice() * item.getQuantity();
+            totalAmount += itemTotalPrice;
+
+            CartItemDTO itemDTO = new CartItemDTO(
+                    hobby.getName(),
+                    item.getQuantity(),
+                    hobby.getPrice(),
+                    itemTotalPrice
+            );
+            items.add(itemDTO);
+        }
+
+        cartDTO.setItems(items);
+        cartDTO.setTotalAmount(totalAmount);
 
         return cartDTO;
     }
@@ -87,112 +77,101 @@ public class CartService {
     // Добавление товара в корзину
     @Transactional
     public CartDTO addItemToCart(Long hobbyId, int quantity) {
-        Cart cart = getCurrentUserCart();
+        UsersInfo user = getCurrentUser();
 
         Hobbies hobby = hobbiesRepository.findById(hobbyId)
                 .orElseThrow(() -> new ItemNotFoundException("Hobby not found with id: " + hobbyId));
 
-        // Проверяем, есть ли уже товар в корзине
-        boolean alreadyExists = cart.getHobbies().stream()
-                .anyMatch(h -> h.getIdHobby().equals(hobbyId));
+        // Проверяем, есть ли уже такой товар в корзине
+        java.util.Optional<Cart> existingItem = cartRepository.findByUserIdAndHobbyId(user.getIdUser(), hobbyId);
 
-        if (!alreadyExists) {
-            cart.getHobbies().add(hobby);
-            cart.setAmount(cart.getAmount() + (int) (hobby.getPrice() * quantity));
-            cartRepository.save(cart);
-            log.info("Added hobby {} to cart for user {}", hobby.getName(), getCurrentUser().getEmail());
+        if (existingItem.isPresent()) {
+            // Если есть, обновляем количество
+            Cart item = existingItem.get();
+            item.setQuantity(item.getQuantity() + quantity);
+            cartRepository.save(item);
+            log.info("Updated quantity of hobby {} in cart for user {}", hobby.getName(), user.getEmail());
         } else {
-            log.info("Hobby {} already in cart for user {}", hobby.getName(), getCurrentUser().getEmail());
+            // Если нет, создаем новую запись
+            Cart cartItem = new Cart();
+            cartItem.setUser(user);
+            cartItem.setHobby(hobby);
+            cartItem.setQuantity(quantity);
+            cartRepository.save(cartItem);
+            log.info("Added hobby {} to cart for user {}", hobby.getName(), user.getEmail());
         }
 
         return getCart();
     }
 
-    // Изменение количества товара (если нужно)
+    // Обновление количества товара
     @Transactional
     public CartDTO updateItemQuantity(Long hobbyId, int quantity) {
-        Cart cart = getCurrentUserCart();
+        UsersInfo user = getCurrentUser();
 
-        Hobbies hobby = cart.getHobbies().stream()
-                .filter(h -> h.getIdHobby().equals(hobbyId))
-                .findFirst()
+        Cart cartItem = cartRepository.findByUserIdAndHobbyId(user.getIdUser(), hobbyId)
                 .orElseThrow(() -> new ItemNotFoundException("Hobby not found in cart"));
 
-        // Пересчитываем общую сумму
-        int oldTotal = cart.getAmount();
-        int newTotal = oldTotal - (int) hobby.getPrice() + (int) (hobby.getPrice() * quantity);
-        cart.setAmount(newTotal);
+        if (quantity <= 0) {
+            cartRepository.delete(cartItem);
+        } else {
+            cartItem.setQuantity(quantity);
+            cartRepository.save(cartItem);
+        }
 
-        cartRepository.save(cart);
-        log.info("Updated quantity of hobby {} in cart for user {}", hobby.getName(), getCurrentUser().getEmail());
-
+        log.info("Updated quantity of hobby {} to {} for user {}", hobbyId, quantity, user.getEmail());
         return getCart();
     }
 
     // Удаление товара из корзины
     @Transactional
     public CartDTO deleteItemFromCart(Long hobbyId) {
-        Cart cart = getCurrentUserCart();
-
-        Hobbies hobby = cart.getHobbies().stream()
-                .filter(h -> h.getIdHobby().equals(hobbyId))
-                .findFirst()
-                .orElseThrow(() -> new ItemNotFoundException("Hobby not found in cart"));
-
-        cart.getHobbies().remove(hobby);
-        cart.setAmount(cart.getAmount() - (int) hobby.getPrice());
-        cartRepository.save(cart);
-
-        log.info("Removed hobby {} from cart for user {}", hobby.getName(), getCurrentUser().getEmail());
+        UsersInfo user = getCurrentUser();
+        cartRepository.deleteByUserIdAndHobbyId(user.getIdUser(), hobbyId);
+        log.info("Removed hobby {} from cart for user {}", hobbyId, user.getEmail());
         return getCart();
     }
 
     // Очистка корзины
     @Transactional
     public CartDTO clearCart() {
-        Cart cart = getCurrentUserCart();
-        cart.getHobbies().clear();
-        cart.setAmount(0);
-        cartRepository.save(cart);
-
-        log.info("Cleared cart for user {}", getCurrentUser().getEmail());
+        UsersInfo user = getCurrentUser();
+        cartRepository.clearCart(user.getIdUser());
+        log.info("Cleared cart for user {}", user.getEmail());
         return getCart();
     }
 
-    // Покупка товаров (расширенная версия)
+    // Покупка товаров
     @Transactional
     public PurchaseResponseDTO purchaseItems(PurchaseDTO purchaseDTO) {
         UsersInfo user = getCurrentUser();
-        Cart cart = getCurrentUserCart();
+        List<Cart> cartItems = cartRepository.findByUserId(user.getIdUser());
 
-        if (cart.getHobbies().isEmpty()) {
+        if (cartItems.isEmpty()) {
             throw new RuntimeException("Cart is empty. Nothing to purchase.");
         }
 
         List<Hobbies> itemsToPurchase = new ArrayList<>();
         int totalAmount = 0;
 
-        // Определяем, какие товары покупаем
         if (purchaseDTO.isPurchaseAll() || purchaseDTO.getHobbyIds() == null || purchaseDTO.getHobbyIds().isEmpty()) {
-            // Покупаем все товары в корзине
-            itemsToPurchase.addAll(cart.getHobbies());
-            totalAmount = cart.getAmount();
-            log.info("User {} is purchasing all items in cart", user.getEmail());
+            for (Cart item : cartItems) {
+                itemsToPurchase.add(item.getHobby());
+                totalAmount += (int) (item.getHobby().getPrice() * item.getQuantity());
+            }
+            log.info("Purchasing all items. Total: {}", totalAmount);
         } else {
-            // Покупаем только выбранные товары
             for (Long hobbyId : purchaseDTO.getHobbyIds()) {
-                Hobbies hobby = cart.getHobbies().stream()
-                        .filter(h -> h.getIdHobby().equals(hobbyId))
+                Cart cartItem = cartItems.stream()
+                        .filter(item -> item.getHobby().getIdHobby().equals(hobbyId))
                         .findFirst()
                         .orElseThrow(() -> new ItemNotFoundException("Hobby with id " + hobbyId + " not found in cart"));
-                itemsToPurchase.add(hobby);
-                totalAmount += hobby.getPrice();
+                itemsToPurchase.add(cartItem.getHobby());
+                totalAmount += (int) (cartItem.getHobby().getPrice() * cartItem.getQuantity());
             }
-            log.info("User {} is purchasing selected items: {}", user.getEmail(), purchaseDTO.getHobbyIds());
+            log.info("Purchasing selected items: {}. Total: {}", purchaseDTO.getHobbyIds(), totalAmount);
         }
 
-
-        // Проверяем достаточно ли средств
         if (user.getBalance_amount() < totalAmount) {
             throw new RuntimeException("Insufficient balance. Need: " + totalAmount +
                     ", Available: " + user.getBalance_amount());
@@ -200,15 +179,11 @@ public class CartService {
 
         // Списываем средства
         user.setBalance_amount(user.getBalance_amount() - totalAmount);
-
-        // Удаляем купленные товары из корзины
-        cart.getHobbies().removeAll(itemsToPurchase);
-        cart.setAmount(cart.getAmount() - totalAmount);
-
         usersInfoRepository.save(user);
-        cartRepository.save(cart);
 
-        // Формируем ответ
+        // Очищаем корзину
+        cartRepository.clearCart(user.getIdUser());
+
         List<HobbyDTO> purchasedItems = itemsToPurchase.stream()
                 .map(hobbiesMapper::toDTO)
                 .collect(Collectors.toList());

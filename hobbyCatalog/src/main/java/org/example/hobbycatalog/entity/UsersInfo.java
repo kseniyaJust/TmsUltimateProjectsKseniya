@@ -37,13 +37,10 @@ public class UsersInfo {
     @JsonIgnore
     private Set<Wallet> wallets;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_users",
-            joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_cart")
-    )
-    private Set<Cart> cartUsers;
+    // Связь с корзиной (один пользователь - много товаров в корзине)
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Cart> cartItems;
 
     @OneToMany(mappedBy = "usersInfo_adress")
     @JsonIgnore

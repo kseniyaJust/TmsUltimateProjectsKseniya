@@ -1,9 +1,7 @@
 package org.example.hobbycatalog.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.Set;
 
 @Entity
 @Data
@@ -15,18 +13,14 @@ public class Cart {
     @Column(name = "id_cart")
     private Long id_cart;
 
-    @ManyToMany(mappedBy = "cartUsers")
-    @JsonIgnore
-    private Set<UsersInfo> usersInfo;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UsersInfo user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_hobbies_relation",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "hobby_id")
-    )
-    private Set<Hobbies> hobbies;
+    @ManyToOne
+    @JoinColumn(name = "hobby_id", nullable = false)
+    private Hobbies hobby;
 
-    @Column(name = "amount")
-    private int amount;
+    @Column(name = "quantity")
+    private int quantity = 1;
 }

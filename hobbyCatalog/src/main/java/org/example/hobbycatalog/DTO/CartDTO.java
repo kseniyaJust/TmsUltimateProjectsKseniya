@@ -1,12 +1,10 @@
 package org.example.hobbycatalog.DTO;
 
 import lombok.Data;
-
-import java.util.Set;
+import java.util.List;
 
 @Data
 public class CartDTO {
-    private Long id_cart;
-    private Set<HobbyDTO> hobbies;
-    private int amount;
+    private List<CartItemDTO> items;  // Список товаров в корзине
+    private int totalAmount;          // Общая сумма корзины
 }

@@ -3,7 +3,7 @@ package org.example.hobbycatalog.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -11,7 +11,7 @@ import java.util.Set;
 public class Hobbies {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Изменил с AUTO на IDENTITY
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_hobby")
     private Long idHobby;
 
@@ -28,7 +28,8 @@ public class Hobbies {
     @Column(name = "price")
     private double price;
 
-    @ManyToMany(mappedBy = "hobbies") // Соответствует полю hobbies в Cart
+    // Связь с корзиной (один товар может быть в корзине у многих пользователей)
+    @OneToMany(mappedBy = "hobby")
     @JsonIgnore
-    private Set<Cart> carts; // Изменил имя с cartHobbies на carts для соответствия
+    private List<Cart> cartItems;
 }
